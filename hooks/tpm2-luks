@@ -1,0 +1,13 @@
+#!/usr/bin/ash
+
+run_hook() {
+    modprobe -a -q dm-crypt >/dev/null 2>&1
+
+    CRYPTDEVICE=$(echo $cryptdevice | cut -d':' -f1)
+    CRYPTNAME=$(echo $cryptdevice | cut -d':' -f2)
+
+    echo "Attempting to unlock $CRYPTDEVICE as $CRYPTNAME using TPM2"
+    tpm2_hmac -c $(cat /etc/tpm2-luks/hmac_handle) --hex /etc/tpm2-luks/challenge | cryptsetup open $CRYPTDEVICE $CRYPTNAME 
+}
+
+# vim: set ft=sh ts=4 sw=4 et:

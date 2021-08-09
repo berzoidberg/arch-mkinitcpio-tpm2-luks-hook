@@ -1,0 +1,16 @@
+#!/bin/sh
+
+build() {
+    add_all_modules "/char/tpm/"
+    add_binary "tpm2_hmac"
+    add_file /etc/tpm2-luks/hmac_handle
+    add_file /etc/tpm2-luks/challenge
+
+    add_runscript
+
+    for _LIBRARY in /usr/lib/libtss2-tcti-device.so*; do
+        if [ -e "${_LIBRARY}" ]; then
+            add_binary "${_LIBRARY}"
+        fi
+    done
+}
